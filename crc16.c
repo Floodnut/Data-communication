@@ -1,3 +1,7 @@
+/*
+    Written by Floodnut, 21.09.2021
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
