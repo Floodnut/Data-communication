@@ -6,12 +6,29 @@
 #include<stdlib.h>
 #include<string.h>
 
-int evenParity(char chr[],size_t len){
-    int i = 0, asc = 0,character, temp;
+const int bufSize = 1024;
 
+char *int2bin(int target){
+    int tmp = target;
+    static char retArr[9]={0,};
+
+    for(int i = (8/*len*/)-1 ; i >= 0 ; i--){
+        retArr[i] = 48 + (tmp % 2);
+        tmp = tmp / 2;
+        if(tmp == 1){
+            retArr[i-1] = 48 + tmp;
+            break;
+        }
+    }
+    return (char*) retArr;
+}
+
+char *evenParity(char *chr,size_t len){
+    int i = 0, asc = 0, character, temp;
+
+    static char retArr[2049] = {0,};
 		for(int j = 0 ; j < len ; j++){
-            if(j != 0)
-                asc = (asc << 8);
+
             character = chr[j] <<1;
             temp = chr[j];
 			for(i = 0 ; temp !=0 ; i++) {
@@ -20,50 +37,45 @@ int evenParity(char chr[],size_t len){
 			if((i % 2)){
 				character |= 1 ; 
 			}
-            asc |= character;
+            memcpy(retArr+(j*8),int2bin(character),9);
 		}
-	return asc;
+	return (char*)retArr;
 }
 
-void CRC16(int message, int length){
-    int shiftedMessage = message << 16;
-    int messageString[1025] = {0,};
-    int genString[18] = {1, 1,0,0,0, 0,0,0,0, 0,0,0,0, 0,1,0,1};
-    int tmp = message;
+void CRC16(char *message, int length){
 
-    int indexCnt = 0;
-    for(int i = (8*length)-1 ; indexCnt < (length * 8) | i >= 0 ; i--){
-        messageString[i] = tmp % 2;
-        tmp = tmp / 2;
-        indexCnt += 1;
-        if(tmp == 1){
-            messageString[i-1] = tmp;
-            break;
-        }
-    }
+    char messageString[2049] = {0,};
+    int genString[17] = {1, 1,0,0,0, 0,0,0,0, 0,0,0,0, 0,1,0,1};
+
+    memcpy(messageString,message,2049);
 
     int counter = 0;
     while(17 <= ((8*length)+16 - counter) && counter < (length*8)){
-        if(messageString[0] == 1){
-            memmove(messageString-1,messageString,1024);
+        if(messageString[0] == 49){
+            memmove(messageString-1,messageString,2049);
             counter += 1;
-            for(short j = 0; j < 16;j++)
-                messageString[j] ^= genString[j+1];
+            for(short j = 0; j < 16;j++){
+                if(messageString[j] == 49){
+                    messageString[j] = 48 + (1 ^ genString[j+1]);
+                }
+                else{
+                    messageString[j] = 48 + (0 ^ genString[j+1]);
+                }
+            }
         }
         else{
-            memmove(messageString-1,messageString,1024);
+            memmove(messageString-1,messageString,2049);
             counter += 1;
         } 
     }
     for(int i = 0; i < 16; i++){
-        printf("%d",messageString[i]);
+        printf("%c",messageString[i]);
     }
     puts("");
 }
 
 int main(){
-	char string[1024];
+	char string[2049];
 	scanf("%s",string);
-    
     CRC16(evenParity(string,strlen(string)),(int)strlen(string));
 }
