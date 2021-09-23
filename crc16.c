@@ -1,6 +1,6 @@
 /*
-    Written by Floodnut, 21.09.2021
-    Error fixed 23.09.2021
+    Written by Floodnut, 09.21.2021
+    Error fixed 09.23.2021
 */
 
 #include<stdio.h>
