@@ -1,5 +1,6 @@
 /*
     Written by Floodnut, 21.09.2021
+    Error fixed 23.09.2021
 */
 
 #include<stdio.h>
