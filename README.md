@@ -4,6 +4,7 @@
   ▶ Computer Graphics    
 ## 2021 3-1  
   ▶ Operating Systems  
+  ▶ Software Design   
 ## 2021 3-2  
   ▶ Data-Communications  
   ▶ OpenCV  
